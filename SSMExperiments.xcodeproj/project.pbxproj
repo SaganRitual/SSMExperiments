@@ -22,6 +22,8 @@
 		D4AC9D1C2BDD530900FAF7CD /* CoreGraphics+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D162BDD530900FAF7CD /* CoreGraphics+Extensions.swift */; };
 		D4AC9D1D2BDD530900FAF7CD /* GridSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D172BDD530900FAF7CD /* GridSize.swift */; };
 		D4AC9D1F2BDD546100FAF7CD /* StringFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */; };
+		D4AC9D212BDD6C8100FAF7CD /* Selectioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */; };
+		D4AC9D232BDD8D6E00FAF7CD /* SelectionerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		D4AC9D162BDD530900FAF7CD /* CoreGraphics+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+Extensions.swift"; sourceTree = "<group>"; };
 		D4AC9D172BDD530900FAF7CD /* GridSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridSize.swift; sourceTree = "<group>"; };
 		D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatting.swift; sourceTree = "<group>"; };
+		D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Selectioner.swift; sourceTree = "<group>"; };
+		D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,8 @@
 			isa = PBXGroup;
 			children = (
 				D4AC9CE62BDD512B00FAF7CD /* ContentView.swift */,
+				D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */,
+				D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */,
 				D4AC9D0F2BDD522F00FAF7CD /* SSMScene.swift */,
 				D4AC9CE42BDD512B00FAF7CD /* SSMExperimentsApp.swift */,
 				D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */,
@@ -295,9 +301,11 @@
 				D4AC9CE72BDD512B00FAF7CD /* ContentView.swift in Sources */,
 				D4AC9D182BDD530900FAF7CD /* GridPoint.swift in Sources */,
 				D4AC9D1D2BDD530900FAF7CD /* GridSize.swift in Sources */,
+				D4AC9D212BDD6C8100FAF7CD /* Selectioner.swift in Sources */,
 				D4AC9D1B2BDD530900FAF7CD /* GridView.swift in Sources */,
 				D4AC9D192BDD530900FAF7CD /* Grid.swift in Sources */,
 				D4AC9D1C2BDD530900FAF7CD /* CoreGraphics+Extensions.swift in Sources */,
+				D4AC9D232BDD8D6E00FAF7CD /* SelectionerView.swift in Sources */,
 				D4AC9D1F2BDD546100FAF7CD /* StringFormatting.swift in Sources */,
 				D4AC9CE52BDD512B00FAF7CD /* SSMExperimentsApp.swift in Sources */,
 				D4AC9D1A2BDD530900FAF7CD /* GridCell.swift in Sources */,

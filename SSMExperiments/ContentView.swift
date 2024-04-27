@@ -3,8 +3,18 @@
 import SpriteKit
 import SwiftUI
 
+class SSMObjects: ObservableObject {
+    @Published var scene: SSMScene
+    @Published var selectioner: Selectioner
+
+    init(scene: SSMScene) {
+        self.scene = scene
+        self.selectioner = Selectioner(scene: scene)
+    }
+}
+
 struct ContentView: View {
-    @ObservedObject private var scene = SSMScene()
+    @ObservedObject private var ssmObjects = SSMObjects(scene: SSMScene())
 
     @State private var hoverLocation: CGPoint = .zero
     @State private var isHovering = false
@@ -19,7 +29,7 @@ struct ContentView: View {
     var body: some View {
         HStack(alignment: .top) {
             ZStack {
-                SpriteView(scene: scene)
+                SpriteView(scene: ssmObjects.scene)
                 Color(cgColor: glassPaneColor)
                     .background() {
                         GeometryReader { geometry in
@@ -38,9 +48,12 @@ struct ContentView: View {
                     .onChanged { value in
                         hoverLocation = value.location
                         isHovering = true
+
+                        ssmObjects.selectioner.dragging(startVertex: value.startLocation, endVertex: value.location)
                     }
                     .onEnded   { value in
                         hoverLocation = value.location
+                        ssmObjects.selectioner.notDragging()
                     }
             )
 
@@ -64,9 +77,7 @@ struct ContentView: View {
             // https://www.hackingwithswift.com/forums/swiftui/how-to-use-mouse-wheel-movement-event-to-call-a-function/21006/26666
             .onAppear(perform:{
                 NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
-                    if isHovering {
-                        scene.scrollWheel(with: event)
-                    }
+                    ssmObjects.scene.scrollWheel(with: event)
                     return event
                 }
             })
@@ -96,7 +107,7 @@ struct ContentView: View {
                     Text("Grid")
                     Spacer()
 
-                    if let grid = scene.grid {
+                    if let grid = ssmObjects.scene.grid {
                         Text("\(grid.size)")
                     } else {
                         Text("N/A")
@@ -104,7 +115,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom)
 
-                Text("Zoom \(String(format: "%.2f", scene.cameraScale).padLeft(targetLength: 6))")
+                Text("Zoom \(String(format: "%.2f", ssmObjects.scene.cameraScale).padLeft(targetLength: 6))")
                     .padding(.bottom)
 
                 HStack {
@@ -124,13 +135,13 @@ struct ContentView: View {
                     HStack {
                         Text("Scene")
                         Spacer()
-                        Text("\(getMousePositionString(forScene: scene, positionInView: hoverLocation))")
+                        Text("\(getMousePositionString(forScene: ssmObjects.scene, positionInView: hoverLocation))")
                     }
 
                     HStack {
                         Text("Grid")
                         Spacer()
-                        Text("\(getMousePositionStringForGrid(scene: scene, positionInView: hoverLocation))")
+                        Text("\(getMousePositionStringForGrid(scene: ssmObjects.scene, positionInView: hoverLocation))")
                     }
                     .padding(.bottom, 10)
                 } else {
@@ -138,20 +149,20 @@ struct ContentView: View {
                         .padding(.bottom, 10 + 16 + 16)
                 }
 
-                Toggle(isOn: $scene.showMainBorder) {
+                Toggle(isOn: $ssmObjects.scene.showMainBorder) {
                     Text("Show main border")
                 }
                 .toggleStyle(.checkbox)
-                .onChange(of: scene.showMainBorder) {
-                    scene.redrawRequired = true
+                .onChange(of: ssmObjects.scene.showMainBorder) {
+                    ssmObjects.scene.redrawRequired = true
                 }
 
-                Toggle(isOn: $scene.showGridLines) {
+                Toggle(isOn: $ssmObjects.scene.showGridLines) {
                     Text("Show grid lines")
                 }
                 .toggleStyle(.checkbox)
-                .onChange(of: scene.showGridLines) {
-                    scene.redrawRequired = true
+                .onChange(of: ssmObjects.scene.showGridLines) {
+                    ssmObjects.scene.redrawRequired = true
                 }
 
                 Spacer()

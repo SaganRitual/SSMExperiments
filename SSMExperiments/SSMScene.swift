@@ -8,7 +8,7 @@ final class SSMScene: SKScene, ObservableObject {
     static let MAX_ZOOM: CGFloat = 8
     static let paddingAllowance = 0.9
 
-    @Published var cameraScale: CGFloat = 0.2
+    @Published var cameraScale: CGFloat = 1
     @Published var showGridLines = true
     @Published var showMainBorder = true
     @Published var redrawRequired = true
@@ -22,6 +22,7 @@ final class SSMScene: SKScene, ObservableObject {
     var grid: Grid<GridCell>!
     var lastUpdateTime: TimeInterval = -1
     var pixelSpriteTexture: SKTexture!
+    var selectionerView: SelectionerView!
 
     @Published var gridView: GridView!
 
@@ -53,7 +54,17 @@ final class SSMScene: SKScene, ObservableObject {
             camera: cameraNode, rootNode: rootNode
         )
 
+        selectionerView = SelectionerView(scene: self)
+
         redraw()
+    }
+
+    func drawRubberBand(from startVertex: CGPoint, to endVertex: CGPoint) {
+        selectionerView?.drawRubberBand(from: startVertex, to: endVertex)
+    }
+
+    func hideRubberBand() {
+        selectionerView?.reset()
     }
 
     func redraw() {
