@@ -57,7 +57,10 @@ extension Selectioner {
         init(scene: SSMScene) { self.scene = scene }
 
         override func didEnter(from previousState: GKState?) {
-            scene.hideRubberBand()
+            // If it's nil then we're starting up and the scene won't be ready
+            if previousState != nil {
+                scene.hideRubberBand()
+            }
         }
     }
 

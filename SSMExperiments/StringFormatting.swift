@@ -34,7 +34,8 @@ func getMousePositionString(forScene scene: SSMScene, positionInView: CGPoint) -
 func getMousePositionStringForGrid(scene: SSMScene, positionInView: CGPoint) -> String {
     let positionInScene = scene.convertPoint(fromView: positionInView)
 
-    guard let positionInGrid = scene.gridView.convertPointFromScene(position: positionInScene) else {
+    let positionInGrid = scene.gridView.convertPointFromScene(position: positionInScene)
+    guard scene.grid.isOnGrid(positionInGrid) else {
         return "Out of bounds"
     }
 

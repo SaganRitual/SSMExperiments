@@ -24,6 +24,7 @@
 		D4AC9D1F2BDD546100FAF7CD /* StringFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */; };
 		D4AC9D212BDD6C8100FAF7CD /* Selectioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */; };
 		D4AC9D232BDD8D6E00FAF7CD /* SelectionerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */; };
+		D4AC9D5C2BDE991000FAF7CD /* SSMCellContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AC9D5B2BDE991000FAF7CD /* SSMCellContents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringFormatting.swift; sourceTree = "<group>"; };
 		D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Selectioner.swift; sourceTree = "<group>"; };
 		D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionerView.swift; sourceTree = "<group>"; };
+		D4AC9D5B2BDE991000FAF7CD /* SSMCellContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSMCellContents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 				D4AC9CE62BDD512B00FAF7CD /* ContentView.swift */,
 				D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */,
 				D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */,
+				D4AC9D5B2BDE991000FAF7CD /* SSMCellContents.swift */,
 				D4AC9D0F2BDD522F00FAF7CD /* SSMScene.swift */,
 				D4AC9CE42BDD512B00FAF7CD /* SSMExperimentsApp.swift */,
 				D4AC9D1E2BDD546100FAF7CD /* StringFormatting.swift */,
@@ -309,6 +312,7 @@
 				D4AC9D1F2BDD546100FAF7CD /* StringFormatting.swift in Sources */,
 				D4AC9CE52BDD512B00FAF7CD /* SSMExperimentsApp.swift in Sources */,
 				D4AC9D1A2BDD530900FAF7CD /* GridCell.swift in Sources */,
+				D4AC9D5C2BDE991000FAF7CD /* SSMCellContents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

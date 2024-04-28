@@ -11,6 +11,7 @@ class GridView {
     let rootNode: SKNode
 
     let gridLineSprites: [SKSpriteNode]
+    var selectionStageCells = Set<GridCell>()
 
     init(scene: SSMScene, grid: Grid<GridCell>, cellSizeInPixels: CGSize, camera: SKCameraNode, rootNode: SKNode) {
         self.camera = camera
@@ -57,7 +58,7 @@ class GridView {
         }
     }
 
-    func convertPointFromScene(position: CGPoint) -> GridPoint? {
+    func convertPointFromScene(position: CGPoint) -> GridPoint {
         let x: Double
         if grid.size.width.isMultiple(of: 2) {
             x = (position.x / cellSizeInPixels.width).rounded(.awayFromZero)
@@ -80,10 +81,57 @@ class GridView {
         let shiftedForOriginAndYAxis = (grid.origin == .center) ?
             gridPoint : gridPoint + GridPoint(x: grid.size.width / 2, y: grid.size.height / 2)
 
-        return grid.isOnGrid(shiftedForOriginAndYAxis) ? shiftedForOriginAndYAxis : nil
+        return shiftedForOriginAndYAxis
+    }
+
+    func convertPointToScene(position: GridPoint) -> CGPoint {
+        CGPoint(x: CGFloat(position.x) * cellSizeInPixels.width, y: CGFloat(position.y) * cellSizeInPixels.height)
+    }
+
+    func getOverlappedCells(from startVertexInScene: CGPoint, to endVertexInScene: CGPoint) -> [GridCell] {
+        // Allow for the start/end points to be swapped, that is, the user has
+        // dragged upward and/or leftward from the drag origin
+        let virtualStartX = startVertexInScene.x < endVertexInScene.x ? startVertexInScene.x : endVertexInScene.x
+        let virtualStartY = startVertexInScene.y > endVertexInScene.y ? startVertexInScene.y : endVertexInScene.y
+
+        let virtualEndX = endVertexInScene.x < startVertexInScene.x ? startVertexInScene.x : endVertexInScene.x
+        let virtualEndY = endVertexInScene.y > startVertexInScene.y ? startVertexInScene.y : endVertexInScene.y
+
+        let virtualStartInScene = CGPoint(x: virtualStartX, y: virtualStartY)
+        let virtualEndInScene = CGPoint(x: virtualEndX, y: virtualEndY)
+
+        let virtualStartInGrid = convertPointFromScene(position: virtualStartInScene)
+        let virtualEndInGrid = convertPointFromScene(position: virtualEndInScene)
+
+        var cells = [GridCell]()
+
+        (virtualStartInGrid.x ... virtualEndInGrid.x).forEach { x in
+            (virtualStartInGrid.y ... virtualEndInGrid.y).forEach { y in
+                let p = GridPoint(x: x, y: y)
+                if grid.isOnGrid(p) {
+                    cells.append(grid.cellAt(p))
+                }
+            }
+        }
+
+        return cells
     }
 
     func showGridLines(_ show: Bool) {
         gridLinesRootNode.isHidden = !show
+    }
+
+    func updateSelectionStagingHilite(from startVertexInScene: CGPoint, to endVertexInScene: CGPoint) {
+        let currentStagedCells = selectionStageCells
+        let overlappedCells = getOverlappedCells(from: startVertexInScene, to: endVertexInScene)
+        let newStagedCells = Set(overlappedCells)
+
+        let toHilite = newStagedCells.subtracting(currentStagedCells)
+        let toUnhilite = currentStagedCells.subtracting(newStagedCells)
+
+        toHilite.forEach { ($0.contents! as! SSMCellContents).selectionStageHiliteSprite.isHidden = false }
+        toUnhilite.forEach { ($0.contents! as! SSMCellContents).selectionStageHiliteSprite.isHidden = true }
+
+        self.selectionStageCells = newStagedCells
     }
 }

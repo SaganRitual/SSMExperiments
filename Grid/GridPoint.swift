@@ -31,7 +31,7 @@ struct GridPoint {
     static func /= (_ L: inout GridPoint, R: Int) { L = L / R }
 }
 
-extension GridPoint: Equatable {}
+extension GridPoint: Equatable, Hashable {}
 
 #if DEBUG
 extension GridPoint: CustomDebugStringConvertible {

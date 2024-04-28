@@ -8,13 +8,15 @@ class SelectionerView {
 
     let scene: SSMScene
 
-    var sceneBorderSprites = [SKSpriteNode]()
+    let selectionExtentSprites: [SKSpriteNode]
+    let selectionHiliteSprites: [SKSpriteNode]
 
-    init(scene: SSMScene) {
+    init(scene: SSMScene, cellSizeInPixels: CGSize) {
         self.scene = scene
-        scene.selectionViewNode.isHidden = true
+        scene.selectionExtentNode.isHidden = true
+        scene.selectionHiliteNode.isHidden = true
 
-        self.sceneBorderSprites = Directions.allCases.map { ss in
+        self.selectionExtentSprites = Directions.allCases.map { ss in
             let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
 
             sprite.alpha = 0.7
@@ -24,7 +26,27 @@ class SelectionerView {
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             sprite.size = CGSize(width: 1, height: 1)
 
-            scene.selectionViewNode.addChild(sprite)
+            scene.selectionExtentNode.addChild(sprite)
+            return sprite
+        }
+
+        self.selectionHiliteSprites = scene.grid.makeIterator().map { gridCell in
+            let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
+
+            sprite.alpha = 0.25
+            sprite.colorBlendFactor = 1
+            sprite.color = .green
+            sprite.isHidden = true
+
+            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            sprite.size = cellSizeInPixels * 0.75
+
+            sprite.position = scene.gridView.convertPointToScene(position: gridCell.gridPosition)
+
+            scene.selectionHiliteNode.addChild(sprite)
+
+            gridCell.contents = SSMCellContents(selectionStageHiliteSprite: sprite)
+
             return sprite
         }
 
@@ -36,7 +58,7 @@ class SelectionerView {
     }
 
     func borderSprite(_ which: Directions) -> SKSpriteNode {
-        sceneBorderSprites[which.rawValue]
+        selectionExtentSprites[which.rawValue]
     }
 
     func drawRubberBand(from startVertex: CGPoint, to endVertex: CGPoint) {
@@ -48,11 +70,11 @@ class SelectionerView {
         if boxSize == .zero {
             // In case the user is futzing with the mouse and causes
             // the box size to go back to zero
-            scene.selectionViewNode.isHidden = true
+            reset()
             return
         }
 
-        scene.selectionViewNode.isHidden = false
+        scene.selectionExtentNode.isHidden = false
 
         let shift = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
 
@@ -84,6 +106,7 @@ class SelectionerView {
     }
 
     func reset() {
-        scene.selectionViewNode.isHidden = true
+        scene.selectionExtentNode.isHidden = true
+        scene.selectionHiliteNode.isHidden = true
     }
 }

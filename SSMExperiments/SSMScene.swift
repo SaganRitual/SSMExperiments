@@ -4,6 +4,7 @@ import SwiftUI
 import SpriteKit
 
 final class SSMScene: SKScene, ObservableObject {
+    static let cellSizeInPixels = CGSize(width: 10, height: 10)
     static let MIN_ZOOM: CGFloat = 0.125
     static let MAX_ZOOM: CGFloat = 8
     static let paddingAllowance = 0.9
@@ -14,7 +15,8 @@ final class SSMScene: SKScene, ObservableObject {
     @Published var redrawRequired = true
 
     let cameraNode = SKCameraNode()
-    let selectionViewNode = SKNode()
+    let selectionExtentNode = SKNode()
+    let selectionHiliteNode = SKNode()
     let rootNode = SKNode()
 
     var centerDotSprite: SKSpriteNode!
@@ -34,7 +36,8 @@ final class SSMScene: SKScene, ObservableObject {
         camera = cameraNode
 
         addChild(rootNode)
-        rootNode.addChild(selectionViewNode)
+        rootNode.addChild(selectionExtentNode)
+        rootNode.addChild(selectionHiliteNode)
 
         centerDotSprite = SKSpriteNode(imageNamed: "circle_100x100")
         centerDotSprite.size *= 0.5
@@ -50,21 +53,27 @@ final class SSMScene: SKScene, ObservableObject {
 
         gridView = GridView(
             scene: self, grid: grid,
-            cellSizeInPixels: CGSize(width: 10, height: 10),
+            cellSizeInPixels: Self.cellSizeInPixels,
             camera: cameraNode, rootNode: rootNode
         )
 
-        selectionerView = SelectionerView(scene: self)
+        selectionerView = SelectionerView(scene: self, cellSizeInPixels: Self.cellSizeInPixels)
 
         redraw()
     }
 
     func drawRubberBand(from startVertex: CGPoint, to endVertex: CGPoint) {
-        selectionerView?.drawRubberBand(from: startVertex, to: endVertex)
+        selectionerView.drawRubberBand(from: startVertex, to: endVertex)
+
+        let startVertexInScene = convertPoint(fromView: startVertex)
+        let endVertexInScene = convertPoint(fromView: endVertex)
+        gridView.updateSelectionStagingHilite(from: startVertexInScene, to: endVertexInScene)
+
+        selectionHiliteNode.isHidden = gridView.selectionStageCells.isEmpty
     }
 
     func hideRubberBand() {
-        selectionerView?.reset()
+        selectionerView.reset()
     }
 
     func redraw() {
