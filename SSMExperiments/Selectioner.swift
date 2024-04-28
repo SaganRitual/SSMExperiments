@@ -8,7 +8,7 @@ protocol SelectionerState: GKState {
     init(scene: SSMScene)
 }
 
-class Selectioner: GKStateMachine {
+class Selectioner: GKStateMachine, ObservableObject {
     var endVertex: CGPoint = .zero
     var startVertex: CGPoint = .zero
 
