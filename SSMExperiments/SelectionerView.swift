@@ -8,47 +8,29 @@ class SelectionerView {
 
     let scene: SSMScene
 
+    let selectionExtentRoot: SKNode
     let selectionExtentSprites: [SKSpriteNode]
+
+    let selectionHiliteRoot: SKNode
     let selectionHiliteSprites: [SKSpriteNode]
 
-    init(scene: SSMScene, cellSizeInPixels: CGSize) {
+    init(
+        scene: SSMScene,
+        selectionExtentRoot: SKNode,
+        selectionExtentSprites: [SKSpriteNode],
+        selectionHiliteRoot: SKNode,
+        selectionHiliteSprites: [SKSpriteNode]
+    ) {
         self.scene = scene
-        scene.selectionExtentNode.isHidden = true
-        scene.selectionHiliteNode.isHidden = true
 
-        self.selectionExtentSprites = Directions.allCases.map { ss in
-            let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
+        self.selectionExtentRoot = selectionExtentRoot
+        self.selectionExtentSprites = selectionExtentSprites
 
-            sprite.alpha = 0.7
-            sprite.colorBlendFactor = 1
-            sprite.color = .yellow
-            sprite.isHidden = false
-            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            sprite.size = CGSize(width: 1, height: 1)
+        self.selectionHiliteRoot = selectionHiliteRoot
+        self.selectionHiliteSprites = selectionHiliteSprites
 
-            scene.selectionExtentNode.addChild(sprite)
-            return sprite
-        }
-
-        self.selectionHiliteSprites = scene.grid.makeIterator().map { gridCell in
-            let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
-
-            sprite.alpha = 0.25
-            sprite.colorBlendFactor = 1
-            sprite.color = .green
-            sprite.isHidden = true
-
-            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-            sprite.size = cellSizeInPixels * 0.75
-
-            sprite.position = scene.gridView.convertPointToScene(position: gridCell.gridPosition)
-
-            scene.selectionHiliteNode.addChild(sprite)
-
-            gridCell.contents = SSMCellContents(selectionStageHiliteSprite: sprite)
-
-            return sprite
-        }
+        selectionExtentRoot.isHidden = true
+        selectionHiliteRoot.isHidden = true
 
         borderSprite(.n).anchorPoint = CGPoint(x: 0, y: 0.5)
         borderSprite(.e).anchorPoint = CGPoint(x: 0.5, y: 0)
@@ -74,7 +56,7 @@ class SelectionerView {
             return
         }
 
-        scene.selectionExtentNode.isHidden = false
+        selectionExtentRoot.isHidden = false
 
         let shift = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
 
@@ -106,7 +88,7 @@ class SelectionerView {
     }
 
     func reset() {
-        scene.selectionExtentNode.isHidden = true
-        scene.selectionHiliteNode.isHidden = true
+        selectionExtentRoot.isHidden = true
+        selectionHiliteRoot.isHidden = true
     }
 }

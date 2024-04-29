@@ -4,9 +4,11 @@ import Foundation
 import SpriteKit
 
 class SSMCellContents: GridCellContentsProtocol {
+    var dotSprite: SKSpriteNode
     var selectionStageHiliteSprite: SKSpriteNode
 
-    init(selectionStageHiliteSprite: SKSpriteNode) {
+    init(dotSprite: SKSpriteNode, selectionStageHiliteSprite: SKSpriteNode) {
+        self.dotSprite = dotSprite
         self.selectionStageHiliteSprite = selectionStageHiliteSprite
     }
 }

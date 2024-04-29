@@ -9,14 +9,12 @@ final class SSMScene: SKScene, ObservableObject {
     static let MAX_ZOOM: CGFloat = 8
     static let paddingAllowance = 0.9
 
-    @Published var cameraScale: CGFloat = 1
+    @Published var cameraScale: CGFloat = 0.2
     @Published var showGridLines = true
     @Published var showMainBorder = true
     @Published var redrawRequired = true
 
     let cameraNode = SKCameraNode()
-    let selectionExtentNode = SKNode()
-    let selectionHiliteNode = SKNode()
     let rootNode = SKNode()
 
     var centerDotSprite: SKSpriteNode!
@@ -25,6 +23,14 @@ final class SSMScene: SKScene, ObservableObject {
     var lastUpdateTime: TimeInterval = -1
     var pixelSpriteTexture: SKTexture!
     var selectionerView: SelectionerView!
+
+    var dotSprites = [SKSpriteNode]()
+
+    let selectionExtentRoot = SKNode()
+    var selectionExtentSprites = [SKSpriteNode]()
+
+    let selectionHiliteRoot = SKNode()
+    var selectionHiliteSprites = [SKSpriteNode]()
 
     @Published var gridView: GridView!
 
@@ -36,8 +42,8 @@ final class SSMScene: SKScene, ObservableObject {
         camera = cameraNode
 
         addChild(rootNode)
-        rootNode.addChild(selectionExtentNode)
-        rootNode.addChild(selectionHiliteNode)
+        rootNode.addChild(selectionExtentRoot)
+        rootNode.addChild(selectionHiliteRoot)
 
         centerDotSprite = SKSpriteNode(imageNamed: "circle_100x100")
         centerDotSprite.size *= 0.5
@@ -57,7 +63,25 @@ final class SSMScene: SKScene, ObservableObject {
             camera: cameraNode, rootNode: rootNode
         )
 
-        selectionerView = SelectionerView(scene: self, cellSizeInPixels: Self.cellSizeInPixels)
+        setupSelectionExtentSprites()
+        setupSelectionHiliteSprites()
+        setupDotSprites()
+
+        (0..<grid.size.area()).forEach { ss in
+            let cell = grid.cellAt(ss)
+            let positionInScene = gridView.convertPointToScene(position: cell.gridPosition)
+
+            selectionHiliteSprites[ss].position = positionInScene
+            dotSprites[ss].position = positionInScene
+
+            cell.contents = SSMCellContents(dotSprite: dotSprites[ss], selectionStageHiliteSprite: selectionHiliteSprites[ss])
+        }
+
+        selectionerView = SelectionerView(
+            scene: self,
+            selectionExtentRoot: selectionExtentRoot, selectionExtentSprites: selectionExtentSprites,
+            selectionHiliteRoot: selectionHiliteRoot, selectionHiliteSprites: selectionHiliteSprites
+        )
 
         redraw()
     }
@@ -69,11 +93,24 @@ final class SSMScene: SKScene, ObservableObject {
         let endVertexInScene = convertPoint(fromView: endVertex)
         gridView.updateSelectionStagingHilite(from: startVertexInScene, to: endVertexInScene)
 
-        selectionHiliteNode.isHidden = gridView.selectionStageCells.isEmpty
+        selectionHiliteRoot.isHidden = gridView.selectionStageCells.isEmpty
     }
 
     func hideRubberBand() {
         selectionerView.reset()
+    }
+
+    override func mouseUp(with event: NSEvent) {
+        let rawScenePoint = event.location(in: self)
+        let scenePoint = CGPoint(x: rawScenePoint.x, y: -rawScenePoint.y)
+        let gridPoint = gridView.convertPointFromScene(position: scenePoint)
+
+        guard grid.isOnGrid(gridPoint) else { return }
+
+        let cell = grid.cellAt(gridPoint)
+        let contents = cell.contents! as! SSMCellContents
+
+        contents.dotSprite.isHidden = !contents.dotSprite.isHidden
     }
 
     func redraw() {
@@ -103,6 +140,63 @@ final class SSMScene: SKScene, ObservableObject {
 
         if redrawRequired {
             redraw()
+        }
+    }
+
+    func updateForSelection() {
+        gridView.selectionStageCells.forEach { cell in
+            let contents = cell.contents! as! SSMCellContents
+            contents.dotSprite.isHidden = !contents.dotSprite.isHidden
+        }
+    }
+}
+
+private extension SSMScene {
+    func setupDotSprites() {
+        self.dotSprites = (0..<grid.size.area()).map { _ in
+            let sprite = SKSpriteNode(imageNamed: "circle_100x100")
+
+            sprite.alpha = 1
+            sprite.colorBlendFactor = 1
+            sprite.color = .blue
+            sprite.isHidden = true
+            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            sprite.size = Self.cellSizeInPixels * 0.25
+
+            rootNode.addChild(sprite)
+            return sprite
+        }
+    }
+
+    func setupSelectionExtentSprites() {
+        self.selectionExtentSprites = SelectionerView.Directions.allCases.map { ss in
+            let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
+
+            sprite.alpha = 0.7
+            sprite.colorBlendFactor = 1
+            sprite.color = .yellow
+            sprite.isHidden = false
+            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            sprite.size = CGSize(width: 1, height: 1)
+
+            selectionExtentRoot.addChild(sprite)
+            return sprite
+        }
+    }
+
+    func setupSelectionHiliteSprites() {
+        self.selectionHiliteSprites = (0..<grid.size.area()).map { _ in
+            let sprite = SKSpriteNode(imageNamed: "pixel_1x1")
+
+            sprite.alpha = 0.25
+            sprite.colorBlendFactor = 1
+            sprite.color = .green
+            sprite.isHidden = true
+            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            sprite.size = Self.cellSizeInPixels * 0.75
+
+            selectionHiliteRoot.addChild(sprite)
+            return sprite
         }
     }
 }

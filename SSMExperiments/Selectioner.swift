@@ -58,9 +58,18 @@ extension Selectioner {
 
         override func didEnter(from previousState: GKState?) {
             // If it's nil then we're starting up and the scene won't be ready
-            if previousState != nil {
-                scene.hideRubberBand()
+            if previousState == nil { return }
+
+            let ps = previousState! as! SelectionerState
+
+            // If we're completing a drag or a plain click,
+            // update all the applicable dots
+            if !(ps is None) {
+                print("ufs")
+                scene.updateForSelection()
             }
+
+            scene.hideRubberBand()
         }
     }
 

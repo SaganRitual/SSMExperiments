@@ -74,12 +74,12 @@ struct ContentView: View {
             // https://www.hackingwithswift.com/users/Magdi
             // Mouse wheel handling that plays nice with drag gesture and continuous hover modifiers
             // https://www.hackingwithswift.com/forums/swiftui/how-to-use-mouse-wheel-movement-event-to-call-a-function/21006/26666
-            .onAppear(perform:{
+            .onAppear {
                 NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
                     scene.scrollWheel(with: event)
                     return event
                 }
-            })
+            }
 
             VStack(alignment: .leading) {
                 HStack {
