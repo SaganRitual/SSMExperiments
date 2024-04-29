@@ -11,7 +11,6 @@ final class SSMScene: SKScene, ObservableObject {
 
     @Published var cameraScale: CGFloat = 0.2
     @Published var showGridLines = true
-    @Published var showMainBorder = true
     @Published var redrawRequired = true
 
     let cameraNode = SKCameraNode()

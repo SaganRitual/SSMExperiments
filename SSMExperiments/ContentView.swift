@@ -8,7 +8,6 @@ struct ContentView: View {
     @ObservedObject var selectioner: Selectioner
 
     @State private var hoverLocation: CGPoint = .zero
-    @State private var ignoreNextMouseUp = false
     @State private var isHovering = false
     @State private var sceneSize: CGSize = .zero
 
@@ -123,7 +122,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom)
 
-                Text("Zoom \(String(format: "%.2f", scene.cameraScale).padLeft(targetLength: 6))")
+                Text("Zoom \(String(format: "%.2f", 1 / scene.cameraScale).padLeft(targetLength: 6))")
                     .padding(.bottom)
 
                 HStack {
@@ -155,14 +154,6 @@ struct ContentView: View {
                 } else {
                     Text("N/A")
                         .padding(.bottom, 10 + 16 + 16)
-                }
-
-                Toggle(isOn: $scene.showMainBorder) {
-                    Text("Show main border")
-                }
-                .toggleStyle(.checkbox)
-                .onChange(of: scene.showMainBorder) {
-                    scene.redrawRequired = true
                 }
 
                 Toggle(isOn: $scene.showGridLines) {

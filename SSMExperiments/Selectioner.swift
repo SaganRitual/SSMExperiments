@@ -62,8 +62,7 @@ extension Selectioner {
 
             let ps = previousState! as! SelectionerState
 
-            // If we're completing a drag or a plain click,
-            // update all the applicable dots
+            // If we're completing a drag, update all the applicable dots
             if !(ps is None) {
                 scene.updateForSelection()
             }
