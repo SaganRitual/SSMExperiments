@@ -67,6 +67,7 @@
 		D4AC9D202BDD6C8100FAF7CD /* Selectioner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Selectioner.swift; sourceTree = "<group>"; };
 		D4AC9D222BDD8D6E00FAF7CD /* SelectionerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionerView.swift; sourceTree = "<group>"; };
 		D4AC9D5B2BDE991000FAF7CD /* SSMCellContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSMCellContents.swift; sourceTree = "<group>"; };
+		D4AC9D5D2BDFED0300FAF7CD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +98,7 @@
 		D4AC9CD82BDD512B00FAF7CD = {
 			isa = PBXGroup;
 			children = (
+				D4AC9D5D2BDFED0300FAF7CD /* README.md */,
 				D4AC9D112BDD52EE00FAF7CD /* Grid */,
 				D4AC9CE32BDD512B00FAF7CD /* SSMExperiments */,
 				D4AC9CF52BDD512D00FAF7CD /* SSMExperimentsTests */,
