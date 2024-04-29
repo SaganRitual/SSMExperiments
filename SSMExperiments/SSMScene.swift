@@ -100,19 +100,6 @@ final class SSMScene: SKScene, ObservableObject {
         selectionerView.reset()
     }
 
-    override func mouseUp(with event: NSEvent) {
-        let rawScenePoint = event.location(in: self)
-        let scenePoint = CGPoint(x: rawScenePoint.x, y: -rawScenePoint.y)
-        let gridPoint = gridView.convertPointFromScene(position: scenePoint)
-
-        guard grid.isOnGrid(gridPoint) else { return }
-
-        let cell = grid.cellAt(gridPoint)
-        let contents = cell.contents! as! SSMCellContents
-
-        contents.dotSprite.isHidden = !contents.dotSprite.isHidden
-    }
-
     func redraw() {
         gridView.showGridLines(showGridLines)
         redrawRequired = false
@@ -129,6 +116,17 @@ final class SSMScene: SKScene, ObservableObject {
 
         cameraScale = newZoom
         cameraNode.setScale(cameraScale)
+    }
+
+    func tap(at positionInView: CGPoint) {
+        let scenePoint = convertPoint(fromView: positionInView)
+        let gridPoint = gridView.convertPointFromScene(position: scenePoint)
+
+        guard grid.isOnGrid(gridPoint) else { return }
+
+        let cell = grid.cellAt(gridPoint)
+        let contents = cell.contents! as! SSMCellContents
+        contents.dotSprite.isHidden = !contents.dotSprite.isHidden
     }
 
     override func update(_ currentTime: TimeInterval) {

@@ -8,6 +8,7 @@ struct ContentView: View {
     @ObservedObject var selectioner: Selectioner
 
     @State private var hoverLocation: CGPoint = .zero
+    @State private var ignoreNextMouseUp = false
     @State private var isHovering = false
     @State private var sceneSize: CGSize = .zero
 
@@ -42,6 +43,7 @@ struct ContentView: View {
                         }
                     }
             }
+
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -53,6 +55,13 @@ struct ContentView: View {
                     .onEnded   { value in
                         hoverLocation = value.location
                         selectioner.notDragging()
+                    }
+            )
+
+            .gesture(
+                TapGesture()
+                    .onEnded {
+                        scene.tap(at: hoverLocation)
                     }
             )
 
@@ -72,7 +81,7 @@ struct ContentView: View {
 
             // With eternal gratitude to
             // https://www.hackingwithswift.com/users/Magdi
-            // Mouse wheel handling that plays nice with drag gesture and continuous hover modifiers
+            // Mouse wheel handling that plays nice with gesture and continuous hover modifiers
             // https://www.hackingwithswift.com/forums/swiftui/how-to-use-mouse-wheel-movement-event-to-call-a-function/21006/26666
             .onAppear {
                 NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
